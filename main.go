@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/arafato/alicloud-vault/cli"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -23,6 +24,8 @@ func run(args []string, exit func(int)) {
 	app.Writer(os.Stdout)
 	app.Version(Version)
 	app.Terminate(exit)
+
+	cli.ConfigureGlobals(app)
 
 	kingpin.MustParse(app.Parse(args))
 }
