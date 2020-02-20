@@ -19,21 +19,18 @@ const (
 
 var (
 	keyringImpl keyring.Keyring
-	// alicloudConfigFile *vault.ConfigFile
-	// configLoader       *vault.ConfigLoader
-	// promptsAvailable   = prompt.Available()
 )
 
 var GlobalFlags struct {
 	Debug        bool
 	Backend      string
-	PromptDriver string
 	KeychainName string
 	PassDir      string
 	PassCmd      string
 	PassPrefix   string
 }
 
+// ConfigureGlobals configures all global keyring settings
 func ConfigureGlobals(app *kingpin.Application) {
 	backendsAvailable := []string{}
 	for _, backendType := range keyring.AvailableBackends() {
@@ -46,11 +43,6 @@ func ConfigureGlobals(app *kingpin.Application) {
 	app.Flag("backend", fmt.Sprintf("Secret backend to use %v", backendsAvailable)).
 		Envar("ALICLOUD_VAULT_BACKEND").
 		EnumVar(&GlobalFlags.Backend, backendsAvailable...)
-
-		// app.Flag("prompt", fmt.Sprintf("Prompt driver to use %v", promptsAvailable)).
-		// 	Default("terminal").
-		// 	Envar("ALICLOUD_VAULT_PROMPT").
-		// 	EnumVar(&GlobalFlags.PromptDriver, promptsAvailable...)
 
 	app.Flag("prompt", "").
 		Default("terminal").
@@ -106,9 +98,6 @@ func ConfigureGlobals(app *kingpin.Application) {
 			}
 		}
 
-		// alicloudConfigFile, err = vault.LoadConfigFromEnv()
-		// configLoader = &vault.ConfigLoader{File: alicloudConfigFile}
-
 		return err
 	})
 }
@@ -125,9 +114,4 @@ func fileKeyringPassphrasePrompt(prompt string) (string, error) {
 	}
 	fmt.Println()
 	return string(b), nil
-}
-
-func getProfileNames() []string {
-	return nil
-	// return alicloudConfigFile.ProfileNames()
 }
