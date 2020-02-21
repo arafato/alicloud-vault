@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/99designs/keyring"
-	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/auth/credentials"
 )
 
 type CredentialKeyring struct {
@@ -43,26 +43,26 @@ func (ck *CredentialKeyring) Has(credentialsName string) (bool, error) {
 	return false, nil
 }
 
-func (ck *CredentialKeyring) Get(credentialsName string) (val credentials.Value, err error) {
+func (ck *CredentialKeyring) Get(credentialsName string) (creds credentials.AccessKeyCredential, err error) {
 	item, err := ck.Keyring.Get(credentialsName)
 	if err != nil {
-		return val, err
+		return creds, err
 	}
 	if err = json.Unmarshal(item.Data, &val); err != nil {
-		return val, fmt.Errorf("Invalid data in keyring: %v", err)
+		return creds, fmt.Errorf("Invalid data in keyring: %v", err)
 	}
-	return val, err
+	return creds, err
 }
 
-func (ck *CredentialKeyring) Set(credentialsName string, val credentials.Value) error {
-	bytes, err := json.Marshal(val)
+func (ck *CredentialKeyring) Set(credentialsName string, creds credentials.AccessKeyCredential) error {
+	bytes, err := json.Marshal(creds)
 	if err != nil {
 		return err
 	}
 
 	return ck.Keyring.Set(keyring.Item{
 		Key:   credentialsName,
-		Label: fmt.Sprintf("aws-vault (%s)", credentialsName),
+		Label: fmt.Sprintf("alicloud-vault (%s)", credentialsName),
 		Data:  bytes,
 
 		// specific Keychain settings
