@@ -26,6 +26,7 @@ func run(args []string, exit func(int)) {
 	app.Terminate(exit)
 
 	cli.ConfigureGlobals(app)
+	cli.ConfigureAddCommand(app)
 
 	kingpin.MustParse(app.Parse(args))
 }

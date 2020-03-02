@@ -6,8 +6,6 @@ import (
 	"log"
 	"os"
 
-	// "github.com/99designs/alicloud-vault/prompt"
-	// "github.com/99designs/alicloud-vault/vault"
 	"github.com/99designs/keyring"
 	"golang.org/x/crypto/ssh/terminal"
 	kingpin "gopkg.in/alecthomas/kingpin.v2"
@@ -43,11 +41,6 @@ func ConfigureGlobals(app *kingpin.Application) {
 	app.Flag("backend", fmt.Sprintf("Secret backend to use %v", backendsAvailable)).
 		Envar("ALICLOUD_VAULT_BACKEND").
 		EnumVar(&GlobalFlags.Backend, backendsAvailable...)
-
-	app.Flag("prompt", "").
-		Default("terminal").
-		Envar("ALICLOUD_VAULT_PROMPT").
-		StringVar(&GlobalFlags.PromptDriver)
 
 	app.Flag("keychain", "Name of macOS keychain to use, if it doesn't exist it will be created").
 		Default("alicloud-vault").

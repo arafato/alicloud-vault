@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/99designs/keyring"
-	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/auth/credentials"
 )
 
 type CredentialKeyring struct {
@@ -43,18 +42,18 @@ func (ck *CredentialKeyring) Has(credentialsName string) (bool, error) {
 	return false, nil
 }
 
-func (ck *CredentialKeyring) Get(credentialsName string) (creds credentials.AccessKeyCredential, err error) {
+func (ck *CredentialKeyring) Get(credentialsName string) (creds *Credential, err error) {
 	item, err := ck.Keyring.Get(credentialsName)
 	if err != nil {
 		return creds, err
 	}
-	if err = json.Unmarshal(item.Data, &val); err != nil {
+	if err = json.Unmarshal(item.Data, &creds); err != nil {
 		return creds, fmt.Errorf("Invalid data in keyring: %v", err)
 	}
 	return creds, err
 }
 
-func (ck *CredentialKeyring) Set(credentialsName string, creds credentials.AccessKeyCredential) error {
+func (ck *CredentialKeyring) Set(credentialsName string, creds *Credential) error {
 	bytes, err := json.Marshal(creds)
 	if err != nil {
 		return err
