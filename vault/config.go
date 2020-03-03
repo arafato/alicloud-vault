@@ -25,20 +25,37 @@ type Config struct {
 
 	// Specifies the wanted duration for credentials generated with AssumeRole
 	AssumeRoleDuration int
+
+	UseSession bool
 }
 
 type ConfigLoader struct {
 	BaseConfig Config
 }
 
-// LoadFromProfile loads the profile from the config file and environment variables into config
-func (cl *ConfigLoader) LoadFromProfile(profileName string) (*Config, error) {
+// Init loads the profile from the config file and environment variables into config
+func (cl *ConfigLoader) LoadProfile(profileName string) (*Config, error) {
 	cl.populateFromEnv(&cl.BaseConfig)
 	err := cl.populateFromConfigFile(&cl.BaseConfig, profileName)
 	if err != nil {
 		return nil, err
 	}
+
 	return &cl.BaseConfig, nil
+}
+
+func (cl *ConfigLoader) GetProfileNames() ([]string, error) {
+	w := new(bytes.Buffer)
+	c, err := config.LoadConfiguration(config.GetConfigPath()+"/"+configFile, w)
+	if err != nil {
+		return []string{}, err
+	}
+	var profileNames []string
+	for _, p := range c.Profiles {
+		profileNames = append(profileNames, p.Name)
+	}
+
+	return profileNames, nil
 }
 
 func (cl *ConfigLoader) populateFromConfigFile(configuration *Config, profileName string) error {
@@ -47,6 +64,7 @@ func (cl *ConfigLoader) populateFromConfigFile(configuration *Config, profileNam
 	if err != nil {
 		return err
 	}
+
 	if configuration.ProfileName == "" {
 		configuration.ProfileName = profile.Name
 	}

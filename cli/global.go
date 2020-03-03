@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/99designs/keyring"
+	"github.com/arafato/alicloud-vault/vault"
 	"golang.org/x/crypto/ssh/terminal"
 	kingpin "gopkg.in/alecthomas/kingpin.v2"
 )
@@ -16,7 +17,8 @@ const (
 )
 
 var (
-	keyringImpl keyring.Keyring
+	keyringImpl  keyring.Keyring
+	configLoader *vault.ConfigLoader
 )
 
 var GlobalFlags struct {
@@ -107,4 +109,9 @@ func fileKeyringPassphrasePrompt(prompt string) (string, error) {
 	}
 	fmt.Println()
 	return string(b), nil
+}
+
+func getProfileNames() []string {
+	p, _ := configLoader.GetProfileNames()
+	return p
 }
