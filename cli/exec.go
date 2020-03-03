@@ -63,8 +63,7 @@ func ConfigureExecCommand(app *kingpin.Application) {
 func ExecCommand(input ExecCommandInput) error {
 
 	configLoader.BaseConfig = input.Config
-	configLoader.ActiveProfile = input.ProfileName
-	config, err := configLoader.LoadFromProfile(input.ProfileName)
+	config, err := configLoader.LoadProfile(input.ProfileName)
 	if err != nil {
 		return err
 	}
