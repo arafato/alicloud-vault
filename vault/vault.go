@@ -14,9 +14,10 @@ func GenerateTempCredentials(config *Config, k *CredentialKeyring) (*TempCredent
 		return nil, err
 	}
 
+	// This part can be extended in future versions to support different kinds of providers if needed.
 	p := AssumeRoleProvider{
 		config: config,
-		c:      creds,
+		creds:  creds,
 	}
 
 	return p.Retrieve()

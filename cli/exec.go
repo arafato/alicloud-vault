@@ -9,7 +9,6 @@ import (
 	"runtime"
 	"strings"
 	"syscall"
-	"time"
 
 	"github.com/99designs/keyring"
 	"github.com/arafato/alicloud-vault/vault"
@@ -33,10 +32,6 @@ func ConfigureExecCommand(app *kingpin.Application) {
 	cmd.Flag("duration", "Duration of the temporary or assume-role session. Defaults to 1h").
 		Short('d').
 		IntVar(&input.SessionDuration)
-
-	cmd.Flag("no-session", "Skip creating STS session with GetSessionToken").
-		Short('n').
-		BoolVar(&input.NoSession)
 
 	cmd.Arg("profile", "Name of the profile").
 		Required().
@@ -69,12 +64,7 @@ func ExecCommand(input ExecCommandInput) error {
 	credKeyring := &vault.CredentialKeyring{Keyring: input.Keyring}
 	creds, err := vault.GenerateTempCredentials(config, credKeyring)
 	if err != nil {
-		return fmt.Errorf("Error getting temporary credentials: %w", err)
-	}
-
-	val, err := creds.Get()
-	if err != nil {
-		return fmt.Errorf("Failed to get credentials for %s: %w", input.ProfileName, err)
+		return fmt.Errorf("Error getting temporary credentials for %s: %w", input.ProfileName, err)
 	}
 
 	env := environ(os.Environ())
@@ -88,18 +78,10 @@ func ExecCommand(input ExecCommandInput) error {
 	}
 
 	log.Println("Setting subprocess env: ALICLOUD_ACCESS_KEY, ALICLOUD_SECRET_KEY")
-	env.Set("ALICLOUD_ACCESS_KEY", val.AccessKeyID)
-	env.Set("ALICLOUD_SECRET_KEY", val.SecretAccessKey)
-
-	if val.SessionToken != "" {
-		log.Println("Setting subprocess env: ALICLOUD_STS_TOKEN")
-		env.Set("ALICLOUD_STS_TOKEN", val.SessionToken)
-		expiration, err := creds.ExpiresAt()
-		if err == nil {
-			log.Println("Setting subprocess env: ALICLOUD_SESSION_EXPIRATION")
-			env.Set("ALICLOUD_SESSION_EXPIRATION", expiration.Format(time.RFC3339))
-		}
-	}
+	env.Set("ALICLOUD_ACCESS_KEY", creds.Creds.AccessKeyID)
+	env.Set("ALICLOUD_SECRET_KEY", creds.Creds.SecretAccessKey)
+	env.Set("ALICLOUD_STS_TOKEN", creds.StsToken)
+	env.Set("ALICLOUD_SESSION_EXPIRATION", creds.Duration)
 
 	err = execSyscall(input.Command, input.Args, env)
 
