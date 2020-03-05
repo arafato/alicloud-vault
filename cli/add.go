@@ -58,7 +58,7 @@ func AddCommand(app *kingpin.Application, input AddCommandInput) {
 		}
 	}
 
-	creds := vault.NewCredential(accessKeyID, secretKey, nil)
+	creds := vault.NewCredentials(accessKeyID, secretKey)
 
 	if err := input.Keyring.Set(input.ProfileName, creds); err != nil {
 		app.Fatalf(err.Error())
@@ -66,10 +66,4 @@ func AddCommand(app *kingpin.Application, input AddCommandInput) {
 	}
 
 	fmt.Printf("Added credentials to profile %q in vault\n", input.ProfileName)
-
-	// sessions := input.Keyring.Sessions()
-
-	// if n, _ := sessions.Delete(input.ProfileName); n > 0 {
-	// 	fmt.Printf("Deleted %d existing sessions.\n", n)
-	// }
 }
