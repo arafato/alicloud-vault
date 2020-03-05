@@ -1,8 +1,11 @@
 package vault
 
+import "time"
+
 type Credentials struct {
 	AccessKeyID     string
 	SecretAccessKey string
+	Created         string
 }
 
 type TempCredentials struct {
@@ -15,6 +18,7 @@ func NewCredentials(accessKeyID, secretAccessKey string) *Credentials {
 	return &Credentials{
 		AccessKeyID:     accessKeyID,
 		SecretAccessKey: secretAccessKey,
+		Created:         time.Now().Format("2006-01-02"),
 	}
 }
 
