@@ -18,7 +18,7 @@ const (
 
 var (
 	keyringImpl  keyring.Keyring
-	configLoader *vault.ConfigLoader
+	configLoader vault.ConfigLoader
 )
 
 var GlobalFlags struct {
