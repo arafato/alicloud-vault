@@ -23,7 +23,6 @@ type ExecCommandInput struct {
 	Keyring         keyring.Keyring
 	Config          vault.Config
 	SessionDuration int
-	NoSession       bool
 }
 
 func ConfigureExecCommand(app *kingpin.Application) {
@@ -54,7 +53,6 @@ func ConfigureExecCommand(app *kingpin.Application) {
 	cmd.Action(func(c *kingpin.ParseContext) error {
 		input.Keyring = keyringImpl
 		input.Config.AssumeRoleDuration = input.SessionDuration
-		input.Config.UseSession = !input.NoSession
 		app.FatalIfError(ExecCommand(input), "exec")
 		return nil
 	})
@@ -69,7 +67,7 @@ func ExecCommand(input ExecCommandInput) error {
 	}
 
 	credKeyring := &vault.CredentialKeyring{Keyring: input.Keyring}
-	creds, err := vault.NewTempCredentials(config, credKeyring)
+	creds, err := vault.GenerateTempCredentials(config, credKeyring)
 	if err != nil {
 		return fmt.Errorf("Error getting temporary credentials: %w", err)
 	}

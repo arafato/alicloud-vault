@@ -14,7 +14,6 @@ type AddCommandInput struct {
 	ProfileName string
 	Keyring     *vault.CredentialKeyring
 	FromEnv     bool
-	AddConfig   bool
 }
 
 func ConfigureAddCommand(app *kingpin.Application) {
@@ -59,7 +58,7 @@ func AddCommand(app *kingpin.Application, input AddCommandInput) {
 		}
 	}
 
-	creds := vault.NewCredential(accessKeyID, secretKey)
+	creds := vault.NewCredential(accessKeyID, secretKey, nil)
 
 	if err := input.Keyring.Set(input.ProfileName, creds); err != nil {
 		app.Fatalf(err.Error())

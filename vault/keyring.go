@@ -18,16 +18,9 @@ func (ck *CredentialKeyring) CredentialsKeys() (credentialsNames []string, err e
 	}
 	for _, keyName := range allKeys {
 		credentialsNames = append(credentialsNames, keyName)
-		// if !IsSessionKey(keyName) {
-		// 	credentialsNames = append(credentialsNames, keyName)
-		// }
 	}
 	return credentialsNames, nil
 }
-
-// func (ck *CredentialKeyring) Sessions() *KeyringSessions {
-// 	return &KeyringSessions{keyring: ck.Keyring}
-// }
 
 func (ck *CredentialKeyring) Has(credentialsName string) (bool, error) {
 	allKeys, err := ck.Keyring.Keys()
@@ -42,7 +35,7 @@ func (ck *CredentialKeyring) Has(credentialsName string) (bool, error) {
 	return false, nil
 }
 
-func (ck *CredentialKeyring) Get(credentialsName string) (creds *Credential, err error) {
+func (ck *CredentialKeyring) Get(credentialsName string) (creds *Credentials, err error) {
 	item, err := ck.Keyring.Get(credentialsName)
 	if err != nil {
 		return creds, err
@@ -53,7 +46,7 @@ func (ck *CredentialKeyring) Get(credentialsName string) (creds *Credential, err
 	return creds, err
 }
 
-func (ck *CredentialKeyring) Set(credentialsName string, creds *Credential) error {
+func (ck *CredentialKeyring) Set(credentialsName string, creds *Credentials) error {
 	bytes, err := json.Marshal(creds)
 	if err != nil {
 		return err

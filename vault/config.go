@@ -25,8 +25,6 @@ type Config struct {
 
 	// Specifies the wanted duration for credentials generated with AssumeRole
 	AssumeRoleDuration int
-
-	UseSession bool
 }
 
 type ConfigLoader struct {
