@@ -98,10 +98,10 @@ Example:
 
 Alicloud Vault supports the following **environments variables** for profile configuration and temporary credential creation. Note that values defined in ~/.aliyun/config always take precendence.
 
-- ALICLOUD_REGION - the region of any service endpoint that is to be used
-- ALICLOUD_ROLE_ARN - the full resource id of the role this profile should assume
-- ALICLOUD_ROLE_SESSION_NAME - the name of the role session
-- ALICLOUD_ASSUME_ROLE_TTL - The TTL of the session token. Minium duration 900 seconds, maximum duration 3600 seconds.
+- `ALICLOUD_REGION` - the region of any service endpoint that is to be used
+- `ALICLOUD_ROLE_ARN` - the full resource id of the role this profile should assume
+- `ALICLOUD_ROLE_SESSION_NAME` - the name of the role session
+- `ALICLOUD_ASSUME_ROLE_TTL` - The TTL of the session token. Minium duration 900 seconds, maximum duration 3600 seconds.
 
 ## Development
 
