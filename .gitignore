@@ -5,8 +5,7 @@
 *.so
 *.dylib
 
-main
-alicloud-vault
+alicloud-vault-*
 
 # Test binary, built with `go test -c`
 *.test
