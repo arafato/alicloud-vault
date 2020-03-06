@@ -30,6 +30,7 @@ func run(args []string, exit func(int)) {
 	cli.ConfigureExecCommand(app)
 	cli.ConfigureListCommand(app)
 	cli.ConfigureRemoveCommand(app)
+	cli.ConfigureRotateCommand(app)
 
 	kingpin.MustParse(app.Parse(args))
 }

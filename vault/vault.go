@@ -1,5 +1,7 @@
 package vault
 
+import "fmt"
+
 type provider interface {
 	Retrieve() *TempCredentials
 }
@@ -18,4 +20,12 @@ func GenerateTempCredentials(config *Config, k *CredentialKeyring) (*TempCredent
 	}
 
 	return p.Retrieve()
+}
+
+func FormatKeyForDisplay(k string) string {
+	if len(k) == 24 {
+		return fmt.Sprintf("%s************\t", string(k[0:12]))
+	}
+	// This does not seem to be a well-formed access key but we show it nevertheless
+	return fmt.Sprintf("%s\t", k)
 }

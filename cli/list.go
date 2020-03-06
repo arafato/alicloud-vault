@@ -52,12 +52,7 @@ func LsCommand(input LsCommandInput) error {
 		if input.OnlyProfiles {
 			continue
 		}
-		if len(creds.AccessKeyID) > 12 {
-			fmt.Fprintf(w, "%s************\t", string(creds.AccessKeyID[0:12]))
-		} else {
-			// This does not seem to be a well-formed access key but we show it nevertheless
-			fmt.Fprintf(w, "%s\t", creds.AccessKeyID)
-		}
+		fmt.Fprintf(w, vault.FormatKeyForDisplay(creds.AccessKeyID))
 		fmt.Fprintf(w, "%s\t", string(creds.Created))
 	}
 	fmt.Fprintf(w, "\n")
