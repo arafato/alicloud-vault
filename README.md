@@ -60,6 +60,17 @@ Alicloud Vault then exposes the temporary credentials to the sub-process through
 ## Profiles
 `alicloud-vault` is tightly integrated with `Aliyun` CLI and requires a matching profile in ~/.aliyun/config. This allows you to seamlessly use your Aliyun CLI configuration together with `alicloud-vault` and `aliyun` CLI.
 It will read configuration data such as `ram_role_arn` directly from this profile. Values defined here take precedence over environment variables. *Access Key ID* and *Access Key Secret* are always read from the keychain, obviously. 
+
+Attributes that need to be specified for StsToken mode are
+- name (Required) - the name of your profile. This needs to match with your alicloud-vault profile name.
+- mode (Required) - Make sure to specify as `StsToken``.
+- ram_role_arn (Required) - the full resource id of the role this profile should assume.  
+- ram_session_name (Required) - the name of the role session.
+- expired_seconds (Required) - The TTL of the session token. Minium duration 900 seconds, maximum duration 3600 seconds.
+- region_id (Optional) - if not specified the default region of any service endpoint that is to be used
+- language (Optional) - the language of the CLI. "en" and  "cn" are currently supported.
+- site (Optional) - INTL account (intl) or domestic account (domestic)  
+
 Example:
 
 ```
@@ -84,6 +95,13 @@ Example:
 	"retry_count": 0
 }
 ```
+
+Alicloud Vault supports the following **environments variables** for profile configuration and temporary credential creation. Note that values defined in ~/.aliyun/config always take precendence.
+
+- ALICLOUD_REGION - the region of any service endpoint that is to be used
+- ALICLOUD_ROLE_ARN - the full resource id of the role this profile should assume
+- ALICLOUD_ROLE_SESSION_NAME - the name of the role session
+- ALICLOUD_ASSUME_ROLE_TTL - The TTL of the session token. Minium duration 900 seconds, maximum duration 3600 seconds.
 
 ## Development
 
