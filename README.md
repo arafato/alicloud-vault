@@ -58,7 +58,7 @@ Alicloud Vault then exposes the temporary credentials to the sub-process through
    ```
 
 ## Profiles
-`alicloud-vault` is tightly integrated with `Aliyun` CLI and requires a matching profile in ~/.aliyun/config. This allows you to seamlessly use your Aliyun CLI configuration together with `alicloud-vault` and `aliyun` CLI.
+`alicloud-vault` is tightly integrated with `Aliyun` CLI and requires a matching profile in ~/.aliyun/config. This allows you to seamlessly use your Aliyun CLI configuration together with `alicloud-vault` and `aliyun` CLI. If you create a new profile in the `alicloud-vault` it will automatically create a matching profile in ~/.aliyun/config if it does not exist yet.
 It will read configuration data such as `ram_role_arn` directly from this profile. Values defined here take precedence over environment variables. *Access Key ID* and *Access Key Secret* are always read from the keychain, obviously. 
 
 Attributes that need to be specified for StsToken mode are
