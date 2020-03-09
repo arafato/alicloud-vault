@@ -65,5 +65,10 @@ func AddCommand(app *kingpin.Application, input AddCommandInput) {
 		return
 	}
 
+	if err := configLoader.AddNewProfile(input.ProfileName); err != nil {
+		app.Fatalf(err.Error())
+		return
+	}
+
 	fmt.Printf("Added credentials to profile %q in vault\n", input.ProfileName)
 }

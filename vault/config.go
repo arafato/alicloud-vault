@@ -2,6 +2,7 @@ package vault
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -28,7 +29,20 @@ type Config struct {
 }
 
 type ConfigLoader struct {
-	BaseConfig Config
+	BaseConfig   Config
+	AliyunConfig config.Configuration
+}
+
+func (cl *ConfigLoader) Init() error {
+	w := new(bytes.Buffer)
+	var err error
+	cl.AliyunConfig, err = config.LoadConfiguration(config.GetConfigPath()+"/"+configFile, w)
+	if err != nil {
+		cl.AliyunConfig = config.NewConfiguration()
+		err = config.SaveConfiguration(cl.AliyunConfig)
+	}
+
+	return err
 }
 
 // Init loads the profile from the config file and environment variables into config
@@ -42,18 +56,28 @@ func (cl *ConfigLoader) LoadProfile(profileName string) (*Config, error) {
 	return &cl.BaseConfig, nil
 }
 
-func (cl *ConfigLoader) GetProfileNames() ([]string, error) {
-	w := new(bytes.Buffer)
-	c, err := config.LoadConfiguration(config.GetConfigPath()+"/"+configFile, w)
-	if err != nil {
-		return []string{}, err
+func (cl *ConfigLoader) AddNewProfile(name string) error {
+	p, exists := cl.AliyunConfig.GetProfile(name)
+	if !exists {
+		p.Mode = "StsToken"
+		cl.AliyunConfig.PutProfile(p)
+		err := config.SaveConfiguration(cl.AliyunConfig)
+		if err == nil {
+			fmt.Printf("Created new profile '%s' in Aliyun CLI config \n", name)
+		}
+		return err
 	}
+
+	return nil
+}
+
+func (cl *ConfigLoader) GetProfileNames() []string {
 	var profileNames []string
-	for _, p := range c.Profiles {
+	for _, p := range cl.AliyunConfig.Profiles {
 		profileNames = append(profileNames, p.Name)
 	}
 
-	return profileNames, nil
+	return profileNames
 }
 
 func (cl *ConfigLoader) populateFromConfigFile(configuration *Config, profileName string) error {

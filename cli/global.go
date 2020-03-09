@@ -93,6 +93,8 @@ func ConfigureGlobals(app *kingpin.Application) {
 			}
 		}
 
+		err = configLoader.Init()
+
 		return err
 	})
 }
@@ -112,6 +114,6 @@ func fileKeyringPassphrasePrompt(prompt string) (string, error) {
 }
 
 func getProfileNames() []string {
-	p, _ := configLoader.GetProfileNames()
+	p := configLoader.GetProfileNames()
 	return p
 }
