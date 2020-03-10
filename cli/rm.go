@@ -9,8 +9,9 @@ import (
 )
 
 type RemoveCommandInput struct {
-	ProfileName string
-	Keyring     *vault.CredentialKeyring
+	ProfileName     string
+	AliyunCliProfil bool
+	Keyring         *vault.CredentialKeyring
 }
 
 func ConfigureRemoveCommand(app *kingpin.Application) {
@@ -23,6 +24,10 @@ func ConfigureRemoveCommand(app *kingpin.Application) {
 		Required().
 		HintAction(getProfileNames).
 		StringVar(&input.ProfileName)
+
+	cmd.Flag("aliyun", "Delete the according Aliyun CLI profile").
+		Short('a').
+		BoolVar(&input.AliyunCliProfil)
 
 	cmd.Action(func(c *kingpin.ParseContext) error {
 		input.Keyring = &vault.CredentialKeyring{Keyring: keyringImpl}
@@ -44,5 +49,13 @@ func RemoveCommand(app *kingpin.Application, input RemoveCommandInput) {
 		app.Fatalf(err.Error())
 		return
 	}
-	fmt.Printf("Deleted profile.\n")
+	fmt.Printf("Deleted profile from Keyvault.\n")
+
+	if input.AliyunCliProfil {
+		if err := configLoader.DeleteProfile(input.ProfileName); err != nil {
+			app.Fatalf(err.Error())
+			return
+		}
+		fmt.Printf("Deleted profile from Aliyun CLI config.\n")
+	}
 }

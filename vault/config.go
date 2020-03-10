@@ -56,6 +56,17 @@ func (cl *ConfigLoader) LoadProfile(profileName string) (*Config, error) {
 	return &cl.BaseConfig, nil
 }
 
+func (cl *ConfigLoader) DeleteProfile(profileName string) error {
+	newConfig := config.NewConfiguration()
+	for _, p := range cl.AliyunConfig.Profiles {
+		if p.Name != profileName {
+			newConfig.PutProfile(p)
+		}
+	}
+	err := config.SaveConfiguration(newConfig)
+	return err
+}
+
 func (cl *ConfigLoader) AddNewProfile(name string) error {
 	p, exists := cl.AliyunConfig.GetProfile(name)
 	if !exists {
