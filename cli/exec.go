@@ -22,6 +22,7 @@ type ExecCommandInput struct {
 	Keyring         keyring.Keyring
 	Config          vault.Config
 	SessionDuration int
+	noSession       bool
 }
 
 func ConfigureExecCommand(app *kingpin.Application) {
@@ -32,6 +33,10 @@ func ConfigureExecCommand(app *kingpin.Application) {
 	cmd.Flag("duration", "Duration of the temporary or assume-role session. Defaults to 1h").
 		Short('d').
 		IntVar(&input.SessionDuration)
+
+	cmd.Flag("no-session", "Skip creating STS session with AssumeRole and use long-term credentials").
+		Short('n').
+		BoolVar(&input.noSession)
 
 	cmd.Arg("profile", "Name of the profile").
 		Required().
@@ -62,6 +67,11 @@ func ExecCommand(input ExecCommandInput) error {
 	}
 
 	credKeyring := &vault.CredentialKeyring{Keyring: input.Keyring}
+
+	if input.noSession {
+		config.RoleARN = ""
+	}
+
 	creds, err := vault.GenerateTempCredentials(config, credKeyring)
 	if err != nil {
 		return fmt.Errorf("Error getting temporary credentials for %s: %w", input.ProfileName, err)

@@ -3,7 +3,7 @@ package vault
 import "fmt"
 
 type provider interface {
-	Retrieve() *TempCredentials
+	Retrieve() (*TempCredentials, error)
 }
 
 func GenerateTempCredentials(config *Config, k *CredentialKeyring) (*TempCredentials, error) {
@@ -13,10 +13,18 @@ func GenerateTempCredentials(config *Config, k *CredentialKeyring) (*TempCredent
 		return nil, err
 	}
 
-	// This part can be extended in future versions to support different kinds of providers if needed.
-	p := AssumeRoleProvider{
-		config: config,
-		creds:  creds,
+	var p provider
+
+	if config.RoleARN == "" {
+		p = LongtermCredsProvider{
+			config: config,
+			creds:  creds,
+		}
+	} else {
+		p = AssumeRoleProvider{
+			config: config,
+			creds:  creds,
+		}
 	}
 
 	return p.Retrieve()
