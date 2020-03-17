@@ -37,6 +37,11 @@ $ alicloud-vault exec jonsmith -- aliyun --profile johnsmith --access-key-id '$A
 bucket_1
 bucket_2
 
+# Export environment variables to new shell context and call Aliyun CLI sequentially
+$ alicloud-vault exec jonsmith
+$ aliyun --profile johnsmith --access-key-id $ALICLOUD_ACCESS_KEY --access-key-secret $ALICLOUD_SECRET_KEY --sts-token $ALICLOUD_STS_TOKEN oss ls
+
+
 # List credentials
 $ alicloud-vault ls
 Profile                  AccessKeyId               Created
