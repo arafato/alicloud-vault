@@ -93,6 +93,10 @@ func ExecCommand(input ExecCommandInput) error {
 	env.Set("ALICLOUD_STS_TOKEN", creds.StsToken)
 	env.Set("ALICLOUD_SESSION_EXPIRATION", creds.Duration)
 
+	// Manually expanding all ALICLOUD_* environments variables that are enclosed with ''.
+	// Environment variables that are not enclosed with '' expand to empty strings if they have not been defined yet in the current shell.
+	input.Args = expandEnvironmentVariables(input.Args, env)
+
 	err = execSyscall(input.Command, input.Args, env)
 
 	if err != nil {
@@ -114,6 +118,27 @@ func (e *environ) Unset(key string) {
 			break
 		}
 	}
+}
+
+func expandEnvironmentVariables(args, env []string) []string {
+	var expanded []string
+	for _, item := range args {
+		if strings.HasPrefix(item[1:], "ALICLOUD_") {
+			expanded = append(expanded, getValue(env, item[1:]))
+		} else {
+			expanded = append(expanded, item)
+		}
+	}
+	return expanded
+}
+
+func getValue(env []string, key string) string {
+	for _, item := range env {
+		if strings.HasPrefix(item, key) {
+			return strings.Split(item, "=")[1]
+		}
+	}
+	return ""
 }
 
 // Set adds an environment variable, replacing any existing ones of the same key
