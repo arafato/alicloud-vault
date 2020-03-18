@@ -135,7 +135,7 @@ func expandEnvironmentVariables(args, env []string) []string {
 func getValue(env []string, key string) string {
 	for _, item := range env {
 		if strings.HasPrefix(item, key) {
-			return strings.Split(item, "=")[1]
+			return strings.SplitN(item, "=", 2)[1]
 		}
 	}
 	return ""
