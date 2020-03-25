@@ -12,6 +12,7 @@ import (
 
 type RotateCommandInput struct {
 	ProfileName string
+	UserName    string
 	Keyring     *vault.CredentialKeyring
 }
 
@@ -24,6 +25,10 @@ func ConfigureRotateCommand(app *kingpin.Application) {
 		Required().
 		HintAction(getProfileNames).
 		StringVar(&input.ProfileName)
+
+	cmd.Flag("username", "The RAM username who's credentials are to be rotated (in case it differs from your profile name)").
+		Short('u').
+		StringVar(&input.UserName)
 
 	cmd.Action(func(c *kingpin.ParseContext) error {
 		input.Keyring = &vault.CredentialKeyring{Keyring: keyringImpl}
@@ -50,7 +55,11 @@ func RotateCommand(input RotateCommandInput) error {
 	client, err := ram.NewClientWithAccessKey(config.Region, oldCreds.AccessKeyID, oldCreds.SecretAccessKey)
 	request := ram.CreateCreateAccessKeyRequest()
 	request.Scheme = "https"
-	request.UserName = input.ProfileName
+	if input.UserName == "" {
+		request.UserName = input.ProfileName
+	} else {
+		request.UserName = input.UserName
+	}
 	response, err := client.CreateAccessKey(request)
 	if err != nil {
 		return err
