@@ -53,7 +53,7 @@ func LsCommand(input LsCommandInput) error {
 			continue
 		}
 		fmt.Fprintf(w, vault.FormatKeyForDisplay(creds.AccessKeyID))
-		fmt.Fprintf(w, "%s\t", string(creds.Created))
+		fmt.Fprintf(w, "%s\t\n", string(creds.Created))
 	}
 	fmt.Fprintf(w, "\n")
 	return w.Flush()
