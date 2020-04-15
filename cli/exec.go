@@ -92,6 +92,7 @@ func ExecCommand(input ExecCommandInput) error {
 	env.Set("ALICLOUD_SECRET_KEY", creds.Creds.SecretAccessKey)
 	env.Set("ALICLOUD_STS_TOKEN", creds.StsToken)
 	env.Set("ALICLOUD_SESSION_EXPIRATION", creds.Duration)
+	env.Set("ALICLOUD_VAULT", input.ProfileName)
 
 	// Manually expanding all ALICLOUD_* environments variables that are enclosed with ''.
 	// Environment variables that are not enclosed with '' expand to empty strings if they have not been defined yet in the current shell.
