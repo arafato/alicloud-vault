@@ -34,7 +34,7 @@ Enter Secret Key: %%%
 
 # Execute a command (using temporary credentials), note that you need to explicitly define the access key, secret and token as flag (enclosed with ') since aliyun is not aware of env variables
 # Environment variables that are not enclosed with ' are not automatically expanded based on the new session context but take the values from the current session.  
-$ alicloud-vault exec jonsmith -- aliyun --profile johnsmith --access-key-id '$ALICLOUD_ACCESS_KEY' --access-key-secret '$ALICLOUD_SECRET_KEY' --sts-token '$ALICLOUD_STS_TOKEN' ecs DescribeInstances
+$ alicloud-vault exec jonsmith -- aliyun --profile johnsmith --access-key-id '$ALICLOUD_ACCESS_KEY_ID' --access-key-secret '$ALICLOUD_ACCESS_KEY_SECRET' --sts-token '$ALICLOUD_STS_TOKEN' ecs DescribeInstances
 {
 	"Instances": {
 		"Instance": [
@@ -46,7 +46,7 @@ $ alicloud-vault exec jonsmith -- aliyun --profile johnsmith --access-key-id '$A
 
 # Export environment variables to new shell context and call Aliyun CLI sequentially
 $ alicloud-vault exec jonsmith
-$ aliyun --profile johnsmith --access-key-id $ALICLOUD_ACCESS_KEY --access-key-secret $ALICLOUD_SECRET_KEY --sts-token $ALICLOUD_STS_TOKEN ecs DescribeInstances
+$ aliyun --profile johnsmith --access-key-id $ALICLOUD_ACCESS_KEY_ID --access-key-secret $ALICLOUD_ACCESS_KEY_SECRET --sts-token $ALICLOUD_STS_TOKEN ecs DescribeInstances
 
 # List credentials
 $ alicloud-vault ls
@@ -62,9 +62,9 @@ Alicloud Vault then exposes the temporary credentials to the sub-process through
    ```bash
    $ alicloud-vault exec jonsmith -- env | grep ALICLOUD
    ALICLOUD_VAULT=jonsmith
-   ALICLOUD_REGION=us-east-1
-   ALICLOUD_ACCESS_KEY=%%%
-   ALICLOUD_SECRET_KEY=%%%
+   ALICLOUD_REGION_ID=us-east-1
+   ALICLOUD_ACCESS_KEY_ID=%%%
+   ALICLOUD_ACCESS_KEY_SECRET=%%%
    ALICLOUD_STS_TOKEN=%%%
    ALICLOUD_SESSION_EXPIRATION=2020-03-06T10:02:33Z
    ```
@@ -112,7 +112,7 @@ Example:
 
 Alicloud Vault supports the following **environments variables** for profile configuration and temporary credential creation. Note that values defined in ~/.aliyun/config always take precendence.
 
-- `ALICLOUD_REGION` - the region of any service endpoint that is to be used
+- `ALICLOUD_REGION_ID` - the region of any service endpoint that is to be used
 - `ALICLOUD_ROLE_ARN` - the full resource id of the role this profile should assume
 - `ALICLOUD_ROLE_SESSION_NAME` - the name of the role session
 - `ALICLOUD_ASSUME_ROLE_TTL` - The TTL of the session token. Minium duration 900 seconds, maximum duration 3600 seconds.

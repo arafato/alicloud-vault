@@ -118,8 +118,8 @@ func (cl *ConfigLoader) populateFromConfigFile(configuration *Config, profileNam
 }
 
 func (cl *ConfigLoader) populateFromEnv(profile *Config) {
-	if region := os.Getenv("ALICLOUD_REGION"); region != "" && profile.Region == "" {
-		log.Printf("Using region %q from ALICLOUD_REGION", region)
+	if region := os.Getenv("ALICLOUD_REGION_ID"); region != "" && profile.Region == "" {
+		log.Printf("Using region %q from ALICLOUD_REGION_ID", region)
 		profile.Region = region
 	}
 	if roleARN := os.Getenv("ALICLOUD_ROLE_ARN"); roleARN != "" && profile.RoleARN == "" {

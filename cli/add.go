@@ -38,12 +38,12 @@ func AddCommand(app *kingpin.Application, input AddCommandInput) {
 	var accessKeyID, secretKey string
 
 	if input.FromEnv {
-		if accessKeyID = os.Getenv("ALICLOUD_ACCESS_KEY"); accessKeyID == "" {
-			app.Fatalf("Missing value for ALICLOUD_ACCESS_KEY")
+		if accessKeyID = os.Getenv("ALICLOUD_ACCESS_KEY_ID"); accessKeyID == "" {
+			app.Fatalf("Missing value for ALICLOUD_ACCESS_KEY_ID")
 			return
 		}
-		if secretKey = os.Getenv("ALICLOUD_SECRET_KEY"); secretKey == "" {
-			app.Fatalf("Missing value for ALICLOUD_SECRET_KEY")
+		if secretKey = os.Getenv("ALICLOUD_ACCESS_KEY_SECRET"); secretKey == "" {
+			app.Fatalf("Missing value for ALICLOUD_ACCESS_KEY_SECRET")
 			return
 		}
 	} else {

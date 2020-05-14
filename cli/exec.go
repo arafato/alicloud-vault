@@ -79,17 +79,17 @@ func ExecCommand(input ExecCommandInput) error {
 
 	env := environ(os.Environ())
 
-	env.Unset("ALICLOUD_ACCESS_KEY")
-	env.Unset("ALICLOUD_SECRET_KEY")
+	env.Unset("ALICLOUD_ACCESS_KEY_ID")
+	env.Unset("ALICLOUD_ACCESS_KEY_SECRET")
 
 	if config.Region != "" {
-		log.Printf("Setting subprocess env: ALICLOUD_REGION=%s", config.Region)
-		env.Set("ALICLOUD_REGION", config.Region)
+		log.Printf("Setting subprocess env: ALICLOUD_REGION_ID=%s", config.Region)
+		env.Set("ALICLOUD_REGION_ID", config.Region)
 	}
 
-	log.Println("Setting subprocess env: ALICLOUD_ACCESS_KEY, ALICLOUD_SECRET_KEY")
-	env.Set("ALICLOUD_ACCESS_KEY", creds.Creds.AccessKeyID)
-	env.Set("ALICLOUD_SECRET_KEY", creds.Creds.SecretAccessKey)
+	log.Println("Setting subprocess env: ALICLOUD_ACCESS_KEY_ID, ALICLOUD_ACCESS_KEY_SECRET")
+	env.Set("ALICLOUD_ACCESS_KEY_ID", creds.Creds.AccessKeyID)
+	env.Set("ALICLOUD_ACCESS_KEY_SECRET", creds.Creds.SecretAccessKey)
 	env.Set("ALICLOUD_STS_TOKEN", creds.StsToken)
 	env.Set("ALICLOUD_SESSION_EXPIRATION", creds.Duration)
 	env.Set("ALICLOUD_VAULT", input.ProfileName)
