@@ -32,9 +32,8 @@ $ alicloud-vault add jonsmith
 Enter Access Key Id: ABDCDEFDASDASF
 Enter Secret Key: %%%
 
-# Execute a command (using temporary credentials), note that you need to explicitly define the access key, secret and token as flag (enclosed with ') since aliyun is not aware of env variables
-# Environment variables that are not enclosed with ' are not automatically expanded based on the new session context but take the values from the current session.  
-$ alicloud-vault exec jonsmith -- aliyun --profile johnsmith --access-key-id '$ALICLOUD_ACCESS_KEY_ID' --access-key-secret '$ALICLOUD_ACCESS_KEY_SECRET' --sts-token '$ALICLOUD_STS_TOKEN' ecs DescribeInstances
+# Execute a command (using temporary credentials).
+$ alicloud-vault exec jonsmith -- aliyun --profile johnsmith ecs DescribeInstances
 {
 	"Instances": {
 		"Instance": [
@@ -46,7 +45,7 @@ $ alicloud-vault exec jonsmith -- aliyun --profile johnsmith --access-key-id '$A
 
 # Export environment variables to new shell context and call Aliyun CLI sequentially
 $ alicloud-vault exec jonsmith
-$ aliyun --profile johnsmith --access-key-id $ALICLOUD_ACCESS_KEY_ID --access-key-secret $ALICLOUD_ACCESS_KEY_SECRET --sts-token $ALICLOUD_STS_TOKEN ecs DescribeInstances
+$ aliyun --profile johnsmith ecs DescribeInstances
 
 # List credentials
 $ alicloud-vault ls
