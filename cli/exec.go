@@ -28,7 +28,7 @@ type ExecCommandInput struct {
 func ConfigureExecCommand(app *kingpin.Application) {
 	input := ExecCommandInput{}
 
-	cmd := app.Command("exec", "Executes a command with AWS credentials in the environment")
+	cmd := app.Command("exec", "Executes a command with Alibaba Cloud credentials in the environment")
 
 	cmd.Flag("duration", "Duration of the temporary or assume-role session. Defaults to 1h").
 		Short('d').
