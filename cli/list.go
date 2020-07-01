@@ -79,7 +79,7 @@ func LsCommand(input LsCommandInput) error {
 		for _, profile := range profileNames {
 			if credName == profile {
 				contains = true
-				continue
+				break
 			}
 		}
 		if !contains {
