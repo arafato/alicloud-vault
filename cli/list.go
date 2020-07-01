@@ -24,6 +24,9 @@ func ConfigureListCommand(app *kingpin.Application) {
 	cmd.Flag("profiles", "Show only the profile names").
 		BoolVar(&input.OnlyProfiles)
 
+	cmd.Flag("credentials", "Show only the profiles with stored credential").
+		BoolVar(&input.OnlyCredentials)
+
 	cmd.Action(func(c *kingpin.ParseContext) error {
 		input.Keyring = &vault.CredentialKeyring{Keyring: keyringImpl}
 		app.FatalIfError(LsCommand(input), "")
@@ -33,32 +36,58 @@ func ConfigureListCommand(app *kingpin.Application) {
 
 func LsCommand(input LsCommandInput) error {
 
+	profileNames := configLoader.GetProfileNames()
 	credentialsNames, err := input.Keyring.CredentialsKeys()
 	if err != nil {
 		return err
 	}
 
-	w := tabwriter.NewWriter(os.Stdout, 25, 4, 2, ' ', 0)
-
-	if !input.OnlyProfiles {
-		fmt.Fprintln(w, "Profile\tAccessKeyId\tCreated\t")
-		fmt.Fprintln(w, "=======\t===========\t========\t")
-	}
-	for _, profileName := range credentialsNames {
-		if input.OnlyProfiles {
-			fmt.Printf("%s\n", profileName)
-			continue
+	if input.OnlyCredentials {
+		for _, c := range credentialsNames {
+			fmt.Printf("%s\n", c)
 		}
+		return nil
+	}
+
+	if input.OnlyProfiles {
+		for _, p := range profileNames {
+			fmt.Printf("%s\n", p)
+		}
+		return nil
+	}
+
+	w := tabwriter.NewWriter(os.Stdout, 25, 4, 2, ' ', 0)
+	fmt.Fprintln(w, "Profile\tCredentials\t")
+	fmt.Fprintln(w, "=======\t===========\t")
+	for _, profileName := range profileNames {
 
 		fmt.Fprintf(w, "%s\t", profileName)
-		creds, err := input.Keyring.Get(profileName)
+		hasCred, err := input.Keyring.Has(profileName)
 		if err != nil {
 			return err
 		}
-
-		fmt.Fprintf(w, vault.FormatKeyForDisplay(creds.AccessKeyID))
-		fmt.Fprintf(w, "%s\t\n", string(creds.Created))
+		if hasCred {
+			fmt.Fprintf(w, "%s\t\n", profileName)
+		} else {
+			fmt.Fprintf(w, "-\t\n")
+		}
 	}
+
+	// show credentials that don't have profiles
+	for _, credName := range credentialsNames {
+		contains := false
+		for _, profile := range profileNames {
+			if credName == profile {
+				contains = true
+				continue
+			}
+		}
+		if !contains {
+			fmt.Fprintf(w, "-\t")
+			fmt.Fprintf(w, "%s\t\n", credName)
+		}
+	}
+
 	fmt.Fprintf(w, "\n")
 	return w.Flush()
 }
