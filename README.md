@@ -49,9 +49,9 @@ $ aliyun --profile johnsmith ecs DescribeInstances
 
 # List credentials
 $ alicloud-vault ls
-Profile                  AccessKeyId               Created
-=======                  ===========               ========
-johnsmith                LTAI7RuRJSPz************  2020-03-06
+Profile                  Credentials               
+=======                  ===========
+johnsmith                johnsmith
 ```
 
 ## How it works
