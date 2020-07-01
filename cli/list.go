@@ -40,18 +40,22 @@ func LsCommand(input LsCommandInput) error {
 
 	w := tabwriter.NewWriter(os.Stdout, 25, 4, 2, ' ', 0)
 
-	fmt.Fprintln(w, "Profile\tAccessKeyId\tCreated\t")
-	fmt.Fprintln(w, "=======\t===========\t========\t")
-
+	if !input.OnlyProfiles {
+		fmt.Fprintln(w, "Profile\tAccessKeyId\tCreated\t")
+		fmt.Fprintln(w, "=======\t===========\t========\t")
+	}
 	for _, profileName := range credentialsNames {
+		if input.OnlyProfiles {
+			fmt.Printf("%s\n", profileName)
+			continue
+		}
+
 		fmt.Fprintf(w, "%s\t", profileName)
 		creds, err := input.Keyring.Get(profileName)
 		if err != nil {
 			return err
 		}
-		if input.OnlyProfiles {
-			continue
-		}
+
 		fmt.Fprintf(w, vault.FormatKeyForDisplay(creds.AccessKeyID))
 		fmt.Fprintf(w, "%s\t\n", string(creds.Created))
 	}
