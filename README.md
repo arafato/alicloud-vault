@@ -9,7 +9,7 @@ Full release and documentation will follow very soon.
 
 You can install Alicloud Vault:
 - by downloading the [latest release](https://github.com/arafato/alicloud-vault/releases/latest)
-- on Arch Linux with the [AUR](https://www.archlinux.org/packages/community/x86_64/alicloud-vault/): `yay -S alicloud-vault`
+- on Arch Linux with the [official repositories](https://www.archlinux.org/packages/community/x86_64/alicloud-vault/): `pacman -S alicloud-vault`
 
 ## Vaulting Backends
 
