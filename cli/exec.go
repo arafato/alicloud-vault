@@ -81,6 +81,9 @@ func ExecCommand(input ExecCommandInput) error {
 
 	env.Unset("ALICLOUD_ACCESS_KEY_ID")
 	env.Unset("ALICLOUD_ACCESS_KEY_SECRET")
+	// Unset Terraform Provider Variables when exit
+	env.Unset("ALICLOUD_ACCESS_KEY")
+	env.Unset("ALICLOUD_SECRET_KEY")
 
 	if config.Region != "" {
 		log.Printf("Setting subprocess env: ALICLOUD_REGION_ID=%s", config.Region)
@@ -90,6 +93,10 @@ func ExecCommand(input ExecCommandInput) error {
 	log.Println("Setting subprocess env: ALICLOUD_ACCESS_KEY_ID, ALICLOUD_ACCESS_KEY_SECRET")
 	env.Set("ALICLOUD_ACCESS_KEY_ID", creds.Creds.AccessKeyID)
 	env.Set("ALICLOUD_ACCESS_KEY_SECRET", creds.Creds.SecretAccessKey)
+	//Add Environment Variables work with terraform alicloud provider
+	env.Set("ALICLOUD_ACCESS_KEY",creds.Creds.AccessKeyID)
+	env.Set("ALICLOUD_SECRET_KEY", creds.Creds.SecretAccessKey)
+	
 	env.Set("ALICLOUD_STS_TOKEN", creds.StsToken)
 	env.Set("ALICLOUD_SESSION_EXPIRATION", creds.Duration)
 	env.Set("ALICLOUD_VAULT", input.ProfileName)
